@@ -1,3 +1,4 @@
+//Quad.h
 #pragma once  
 #include <DirectXMath.h>
 #include "Direct3D.h"  
@@ -14,8 +15,10 @@ struct CONSTANT_BUFFER
 //’¸“_î•ñ
 struct VERTEX
 {
-	XMVECTOR position;
-	XMVECTOR uv;
+	XMFLOAT4 position;
+	XMFLOAT2 uv;
+	//XMVECTOR position;
+	//XMVECTOR uv;
 };
 
 class Texture; // ‘O•ûéŒ¾

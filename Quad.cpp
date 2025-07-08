@@ -1,6 +1,6 @@
 #include "Quad.h"
 #include "Camera.h"
-#include "Texture.h"
+//#include "Texture.h"
 
 Quad::Quad()
 {
