@@ -7,7 +7,7 @@
 #include "resource.h"
 #include "Camera.h"
 #include "Texture.h"
-#define MAX_LOADSTRING 100
+constexpr auto MAX_LOADSTRING = 100;
 
 
 const wchar_t* WIN_CLASS_NAME = L"SAMPLE GAME WINDOW";
