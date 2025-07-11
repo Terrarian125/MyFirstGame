@@ -16,6 +16,7 @@ const int WINDOW_HEIGHT = 600;
 // グローバル変数の宣誓
 
 // グローバル変数:
+HWND hWnd;                                   // メイン ウィンドウ ハンドル
 HINSTANCE hInst;                                // 現在のインターフェイス
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 wchar_t szWindowClass[] = L"MyWindowClass";       // メイン ウィンドウ クラス名
@@ -46,8 +47,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
    }
 
    // Direct3Dの初期化
-   HRESULT hr = S_OK; 
-   // hr = Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
+   HRESULT hr = S_OK;
+   hr = Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
    if (FAILED(hr))
    {
        MessageBox(nullptr, L"Direct3Dの初期化に失敗しました", L"エラー", MB_OK);
@@ -126,8 +127,17 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     int winW = winRect.right - winRect.left;     //ウィンドウ幅
     int winH = winRect.bottom - winRect.top;     //ウィンドウ高さ
 
-    HWND g_hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, winW, winH, nullptr, nullptr, hInstance, nullptr);
+    // ★ 修正ここ！
+    hWnd = CreateWindowW(
+        szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, winW, winH,
+        nullptr, nullptr, hInstance, nullptr
+    );
+
+    if (!hWnd) return FALSE;
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
 
     return TRUE;
 }

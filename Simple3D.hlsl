@@ -1,15 +1,16 @@
 //───────────────────────────────────────
 // テクスチャ＆サンプラーデータのグローバル変数定義
 //───────────────────────────────────────
-Texture2D g_texture : register(t0); //テクスチャー
-SamplerState g_sampler : register(s0); //サンプラー
+Texture2D g_texture : register(t0); // テクスチャー
+SamplerState g_sampler : register(s0); // サンプラー
+
 //───────────────────────────────────────
 // コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義
 //───────────────────────────────────────
 cbuffer global
 {
-	float4x4	matWVP;			// ワールド・ビュー・プロジェクションの合成行列
+    float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
 };
 
 //───────────────────────────────────────
@@ -17,24 +18,23 @@ cbuffer global
 //───────────────────────────────────────
 struct VS_OUT
 {
-	float4 pos    : SV_POSITION;	//位置
-    float2 uv : TEXCOORD; //UV座標
+    float4 pos : SV_POSITION; // 位置
+    float2 uv : TEXCOORD; // UV座標
 };
 
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
+VS_OUT VS(float3 pos : POSITION, float2 uv : TEXCOORD)
 {
-	//ピクセルシェーダーへ渡す情報
-	VS_OUT outData;
+    VS_OUT outData;
 
-	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
-	//スクリーン座標に変換し、ピクセルシェーダーへ
-	outData.pos = mul(pos, matWVP);
+    // ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
+    // スクリーン座標に変換し、ピクセルシェーダーへ渡す
+    outData.pos = mul(float4(pos, 1.0f), matWVP);
     outData.uv = uv;
-	//まとめて出力
-	return outData;
+
+    return outData;
 }
 
 //───────────────────────────────────────

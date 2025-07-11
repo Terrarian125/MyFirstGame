@@ -19,17 +19,20 @@ void Camera::Initialize()
 //更新
 void Camera::Update()
 {
+	//ここ？
 	viewMatrix_ = XMMatrixLookAtLH(position_, target_, XMVectorSet(0, 1, 0, 0));
 }
 
 //位置を設定
 void Camera::SetPosition(XMVECTOR position)
 {
+	position_ = position;
 }
 
-//焦点を設定
+//ターゲットを設定
 void Camera::SetTarget(XMVECTOR target)
 {
+	target_ = target;
 }
 
 //ビュー行列を取得

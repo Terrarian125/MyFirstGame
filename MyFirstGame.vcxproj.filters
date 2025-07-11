@@ -77,7 +77,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Sinple3D.hlsl" />
+    <FxCompile Include="Simple3D.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

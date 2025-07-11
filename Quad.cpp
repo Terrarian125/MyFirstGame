@@ -26,17 +26,16 @@ HRESULT Quad::Initialize()
 		{{ 1.0f, -1.0f, 0.0f, 0.0f},{1.0f,1.0f}},   // 四角形の頂点（右下）
 		{{-1.0f, -1.0f, 0.0f, 0.0f},{0.0f,1.0f}}   // 四角形の頂点（左下）
 	};
-	//const int numVertices = sizeof(vertices) / sizeof(vertices[0]);
 
 	// 頂点データ用バッファの設定
-	D3D11_BUFFER_DESC bd_vertex{};
+	D3D11_BUFFER_DESC bd_vertex ;
 	bd_vertex.ByteWidth = sizeof(vertices);
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
 	bd_vertex.MiscFlags = 0;
 	bd_vertex.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA data_vertex{};
+	D3D11_SUBRESOURCE_DATA data_vertex ;
 	data_vertex.pSysMem = vertices;
 	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	if (FAILED(hr))
@@ -48,14 +47,14 @@ HRESULT Quad::Initialize()
 	//インデックス情報
 	int index[] = { 0,2,3, 0,1,2 };
 	// インデックスバッファを生成する
-	D3D11_BUFFER_DESC   bd{};
+	D3D11_BUFFER_DESC   bd ;
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(index);
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
-	D3D11_SUBRESOURCE_DATA InitData{};
+	D3D11_SUBRESOURCE_DATA InitData ;
 	InitData.pSysMem = index;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
@@ -67,7 +66,7 @@ HRESULT Quad::Initialize()
 	}
 
 	//コンスタントバッファ作成
-	D3D11_BUFFER_DESC cb{};
+	D3D11_BUFFER_DESC cb ;
 	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -93,7 +92,7 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 {
 	//コンスタントバッファに渡す情報
 	D3D11_MAPPED_SUBRESOURCE pdata;
-	CONSTANT_BUFFER cb{};
+	CONSTANT_BUFFER cb ;
 	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

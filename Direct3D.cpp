@@ -1,8 +1,10 @@
+//Direct3D.cpp
 #include <d3dcompiler.h>
 #include "Direct3D.h"
 #include <assert.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <stdio.h>  
 
 HWND g_hWnd = nullptr;
 
@@ -21,79 +23,6 @@ namespace Direct3D {
     ID3D11RasterizerState* pRasterizerState = nullptr;
 }
 
-// 初期化
-HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
-{
-    g_hWnd = hWnd;
-    DXGI_SWAP_CHAIN_DESC scDesc = {};
-    scDesc.BufferDesc.Width = winW;
-    scDesc.BufferDesc.Height = winH;
-    scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    scDesc.BufferDesc.RefreshRate.Numerator = 60;
-    scDesc.BufferDesc.RefreshRate.Denominator = 1;
-    scDesc.Windowed = TRUE;
-    scDesc.OutputWindow = hWnd;
-    scDesc.BufferCount = 1;
-    scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    scDesc.SampleDesc.Count = 1;
-    scDesc.SampleDesc.Quality = 0;
-
-    D3D_FEATURE_LEVEL level;
-
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(
-        nullptr,
-        D3D_DRIVER_TYPE_HARDWARE,
-        nullptr,
-        0,
-        nullptr,
-        0,
-        D3D11_SDK_VERSION,
-        &scDesc,
-        &Direct3D::pSwapChain,
-        &Direct3D::pDevice,
-        &level,
-        &Direct3D::pContext);
-
-    if (FAILED(hr)) {
-        MessageBox(nullptr, L"Direct3Dデバイスの作成に失敗しました", L"エラー", MB_OK);
-        return hr;
-    }
-
-    ID3D11Texture2D* pBackBuffer = nullptr;
-    hr = Direct3D::pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-    if (FAILED(hr)) {
-        MessageBox(nullptr, L"バックバッファの取得に失敗しました", L"エラー", MB_OK);
-        return hr;
-    }
-
-    hr = Direct3D::pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &Direct3D::pRenderTargetView);
-    pBackBuffer->Release();
-    if (FAILED(hr)) {
-        MessageBox(nullptr, L"レンダーターゲットビューの作成に失敗しました", L"エラー", MB_OK);
-        return hr;
-    }
-
-    D3D11_VIEWPORT vp = {};
-    vp.Width = static_cast<float>(winW);
-    vp.Height = static_cast<float>(winH);
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-
-    Direct3D::pContext->RSSetViewports(1, &vp);
-    Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    Direct3D::pContext->OMSetRenderTargets(1, &Direct3D::pRenderTargetView, nullptr);
-
-    hr = InitShader();
-    if (FAILED(hr)) {
-        MessageBox(nullptr, L"シェーダー初期化に失敗しました", L"エラー", MB_OK);
-        return hr;
-    }
-
-    return S_OK;
-}
-
 // シェーダーの初期化
 HRESULT Direct3D::InitShader()
 {
@@ -101,7 +30,7 @@ HRESULT Direct3D::InitShader()
 
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
-    hr = D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &pCompileVS, nullptr);
+    hr = D3DCompileFromFile(L"simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &pCompileVS, nullptr);
     if (FAILED(hr) || pCompileVS == nullptr) {
         MessageBox(nullptr, L"頂点シェーダのコンパイルに失敗しました", L"エラー", MB_OK);
         return hr;
@@ -161,6 +90,83 @@ HRESULT Direct3D::InitShader()
 
     return S_OK;
 }
+
+// 初期化
+HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
+{
+    g_hWnd = hWnd;
+    DXGI_SWAP_CHAIN_DESC scDesc = {};
+    scDesc.BufferDesc.Width = winW;
+    scDesc.BufferDesc.Height = winH;
+    scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scDesc.BufferDesc.RefreshRate.Numerator = 60;
+    scDesc.BufferDesc.RefreshRate.Denominator = 1;
+    scDesc.Windowed = TRUE;
+    scDesc.OutputWindow = hWnd;
+    scDesc.BufferCount = 1;
+    scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    scDesc.SampleDesc.Count = 1;
+    scDesc.SampleDesc.Quality = 0;
+
+    D3D_FEATURE_LEVEL level;
+
+    HRESULT hr = D3D11CreateDeviceAndSwapChain(
+        nullptr,
+        D3D_DRIVER_TYPE_HARDWARE,
+        nullptr,
+        0,
+        nullptr,
+        0,
+        D3D11_SDK_VERSION,
+        &scDesc,
+        &Direct3D::pSwapChain,
+        &Direct3D::pDevice,
+        &level,
+        &Direct3D::pContext);
+
+    if (FAILED(hr)) {
+        wchar_t errMsg[128];
+        swprintf_s(errMsg, L"Direct3Dデバイスの作成に失敗しました。\nHRESULT = 0x%08X", hr);
+        MessageBox(nullptr, errMsg, L"エラー", MB_OK);
+        return hr;
+    }
+
+    ID3D11Texture2D* pBackBuffer = nullptr;
+    hr = Direct3D::pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    if (FAILED(hr)) {
+        MessageBox(nullptr, L"バックバッファの取得に失敗しました", L"エラー", MB_OK);
+        return hr;
+    }
+
+    hr = Direct3D::pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &Direct3D::pRenderTargetView);
+    pBackBuffer->Release();
+    if (FAILED(hr)) {
+        MessageBox(nullptr, L"レンダーターゲットビューの作成に失敗しました", L"エラー", MB_OK);
+        return hr;
+    }
+
+    D3D11_VIEWPORT vp = {};
+    vp.Width = static_cast<float>(winW);
+    vp.Height = static_cast<float>(winH);
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+
+    Direct3D::pContext->RSSetViewports(1, &vp);
+    Direct3D::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    Direct3D::pContext->OMSetRenderTargets(1, &Direct3D::pRenderTargetView, nullptr);
+
+    hr = InitShader();
+    if (FAILED(hr)) {
+        MessageBox(nullptr, L"シェーダー初期化に失敗しました", L"エラー", MB_OK);
+        return hr;
+    }
+
+    return S_OK;
+}
+
+
 
 
 // 描画開始
