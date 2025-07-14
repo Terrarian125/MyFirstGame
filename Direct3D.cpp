@@ -30,7 +30,7 @@ HRESULT Direct3D::InitShader()
 
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
-    hr = D3DCompileFromFile(L"simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &pCompileVS, nullptr);
+    hr = D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &pCompileVS, nullptr);
     if (FAILED(hr) || pCompileVS == nullptr) {
         MessageBox(nullptr, L"頂点シェーダのコンパイルに失敗しました", L"エラー", MB_OK);
         return hr;
