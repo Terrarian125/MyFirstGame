@@ -9,8 +9,8 @@ XMMATRIX projMatrix_;	//プロジェクション行列
 //初期化
 void Camera::Initialize()
 {
-	position_ = XMVectorSet(0.0f, 3.0f, -10.0f, 1.0f); // カメラの初期位置
-	target_ = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); // カメラの焦点
+	position_ = XMVectorSet(0, 3, -10, 0);	//カメラの位置
+	target_ = XMVectorSet(0, 0, 0, 0);	//カメラの焦点
 
 	//プロジェクション行列
 	projMatrix_ = XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)800 / (FLOAT)600, 0.1f, 100.0f);
@@ -19,30 +19,30 @@ void Camera::Initialize()
 //更新
 void Camera::Update()
 {
-	//ここ？
+	//ビュー行列の作成
 	viewMatrix_ = XMMatrixLookAtLH(position_, target_, XMVectorSet(0, 1, 0, 0));
 }
 
 //位置を設定
 void Camera::SetPosition(XMVECTOR position)
 {
-	position_ = position;
+	position_ = position;	//カメラの位置を設定
 }
 
-//ターゲットを設定
+//焦点を設定
 void Camera::SetTarget(XMVECTOR target)
 {
-	target_ = target;
+	target_ = target;	//見る位置（焦点）を設定
 }
 
 //ビュー行列を取得
 XMMATRIX Camera::GetViewMatrix()
 {
-	return viewMatrix_;
+	return viewMatrix_;	//ビュー行列を返す
 }
 
 //プロジェクション行列を取得
 XMMATRIX Camera::GetProjectionMatrix()
 {
-	return projMatrix_;
+	return projMatrix_;	//プロジェクション行列を返す
 }

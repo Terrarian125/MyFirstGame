@@ -1,90 +1,59 @@
-
 #include "Texture.h"
 #include "Direct3D.h"
 #include <DirectXTex.h>
 
+// DirectXTexのライブラリをリンク
 #pragma comment(lib, "DirectXTex.lib")
 
 using namespace DirectX;
 
 Texture::Texture()
-	: pSampler_(nullptr), pSRV_(nullptr)
 {
 }
 
 Texture::~Texture()
 {
-	Release();
 }
 
 HRESULT Texture::Load(std::string fileName)
 {
-	TexMetadata metadata;    // 画像の付属情報
-	ScratchImage image;      // 画像本体
+	TexMetadata metadata; //画像の付属情報
 
-	// std::string → std::wstring 変換
-	std::wstring wFileName(fileName.begin(), fileName.end());
+	ScratchImage image;   //画像本体
 
-	// 画像ファイルを読み込む
-	HRESULT hr = LoadFromWICFile(wFileName.c_str(), WIC_FLAGS_NONE, &metadata, image);
+	HRESULT hr;
+
+	//実際に読んでゆくぅ　　　　　 
+	std::wstring wfileName(fileName.begin(), fileName.end());
+	hr = LoadFromWICFile(wfileName.c_str(), WIC_FLAGS::WIC_FLAGS_NONE,
+		&metadata, image);
 	if (FAILED(hr))
 	{
-		return hr;
+		return S_FALSE;
 	}
 
-	// サンプラーステートの設定
-	D3D11_SAMPLER_DESC samplerDesc = {};
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-	hr = Direct3D::pDevice->CreateSamplerState(&samplerDesc, &pSampler_);
-	if (FAILED(hr))
-	{
-		return hr;
-	}
+	D3D11_SAMPLER_DESC  SamDesc;
+	ZeroMemory(&SamDesc, sizeof(D3D11_SAMPLER_DESC));
+	SamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	SamDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	SamDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	SamDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	Direct3D::pDevice->CreateSamplerState(&SamDesc, &pSampler_);
 
-	// シェーダーリソースビューの作成
-	hr = CreateShaderResourceView(
-		Direct3D::pDevice,
-		image.GetImages(),
-		image.GetImageCount(),
-		metadata,
-		&pSRV_);
-	if (FAILED(hr))
-	{
-		// サンプラーステートは作成済みなので解放
-		if (pSampler_)
-		{
-			pSampler_->Release();
-			pSampler_ = nullptr;
-		}
-		return hr;
-	}
+	//シェーダーリソースビュー
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srv = {};
+	srv.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srv.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srv.Texture2D.MipLevels = 1;
+	hr = CreateShaderResourceView(Direct3D::pDevice,
+		image.GetImages(), image.GetImageCount(), metadata, &pSRV_);
 
 	return S_OK;
 }
 
 void Texture::Release()
 {
-	if (pSampler_)
-	{
-		pSampler_->Release();
-		pSampler_ = nullptr;
-	}
-	if (pSRV_)
-	{
-		pSRV_->Release();
-		pSRV_ = nullptr;
-	}
-}
-
-ID3D11SamplerState* Texture::GetSampler()
-{
-	return pSampler_;
-}
-
-ID3D11ShaderResourceView* Texture::GetSRV()
-{
-	return pSRV_;
+	pSampler_->Release();
+	pSRV_->Release();
 }

@@ -1,27 +1,17 @@
 #pragma once
-#include <d3d11.h>
-#include <DirectXMath.h>
-#include "Texture.h"
+#include "Quad.h"
 
-class Dice
+
+
+
+class Dice :
+	public Quad
 {
 public:
-    Dice();
-    ~Dice();
-
-    HRESULT Initialize();
-    void Draw(DirectX::XMMATRIX worldMatrix);
-
-private:
-    HRESULT CreateVertexBuffer();
-
-    ID3D11Buffer* vertexBuffer_;
-    ID3D11Buffer* constantBuffer_;
-    Texture* texture_;
-
-    struct Vertex
-    {
-        DirectX::XMFLOAT3 pos;
-        DirectX::XMFLOAT2 uv;
-    };
+	Dice();
+	~Dice();
+	HRESULT Initialize() override;
+	void Draw(XMMATRIX& worldMatrix) override;
+	void Release();
 };
+

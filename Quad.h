@@ -1,39 +1,38 @@
-//Quad.h
-#pragma once  
+#pragma once
+#include "Direct3D.h"
 #include <DirectXMath.h>
-#include "Direct3D.h"  
-#include "Texture.h"
 
 using namespace DirectX;
 
-// コンスタントバッファー  
-struct CONSTANT_BUFFER  
-{  
-   DirectX::XMMATRIX matWVP; 
-   DirectX::XMMATRIX	matNormal;
-};  
+struct CONSTANT_BUFFER
+{
+	DirectX::XMMATRIX matWVP; //world*view*projectionの行列
+	DirectX::XMMATRIX matNormal; //法線変換用の行列
+	DirectX::XMMATRIX matWorld; //ワールド行列
+};
 
-//頂点情報
 struct VERTEX
 {
-	XMFLOAT4 position;
-	XMFLOAT2 uv;
-	XMFLOAT3 normal;
+	XMFLOAT4 pos;	//位置
+	XMFLOAT2 uv;	//UV座標
+	XMFLOAT4 normal; //法線ベクトル
 };
 
-class Texture; // 前方宣言
+//前方宣言
+class Texture;//Textureクラスってのがどこかにあってだなぁ宣言
 
-class Quad  
-{  
-public:  
-   Quad();  
-   ~Quad();  
-  HRESULT Initialize();  
-   void Draw(DirectX::XMMATRIX& worldMatrix);
-   void Release();  
-private:
-	ID3D11Buffer* pVertexBuffer_;
-	ID3D11Buffer* pIndexBuffer_;
-	ID3D11Buffer* pConstantBuffer_;
-	Texture* pTexture_;
+class Quad
+{
+public:
+	Quad();
+	virtual ~Quad();
+	virtual HRESULT Initialize();
+	virtual void Draw(XMMATRIX& worldMatrix);
+	void Release();
+protected:
+	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
+	ID3D11Buffer* pIndexBuffer_;	//インデックスバッファ
+	ID3D11Buffer* pConstantBuffer_;	//定数バッファ
+	Texture* pTexture_;	//テクスチャ
 };
+
