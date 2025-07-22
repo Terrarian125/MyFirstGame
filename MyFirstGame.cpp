@@ -83,7 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             // 回転行列
             static float angle = 0.0f;
-            angle += 0.05f;
+            angle += 0.084f;
             if (angle > 360.0f) angle -= 360.0f;
             XMMATRIX rot = XMMatrixRotationY(XMConvertToRadians(angle));
 

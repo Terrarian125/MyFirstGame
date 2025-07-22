@@ -10,6 +10,7 @@ using namespace DirectX;
 struct CONSTANT_BUFFER  
 {  
    DirectX::XMMATRIX matWVP; 
+   DirectX::XMMATRIX	matW;
 };  
 
 //í∏ì_èÓïÒ
@@ -17,8 +18,7 @@ struct VERTEX
 {
 	XMFLOAT4 position;
 	XMFLOAT2 uv;
-	//XMVECTOR position;
-	//XMVECTOR uv;
+	XMFLOAT3 normal;
 };
 
 class Texture; // ëOï˚êÈåæ

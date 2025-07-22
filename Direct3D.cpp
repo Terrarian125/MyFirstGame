@@ -43,10 +43,17 @@ HRESULT Direct3D::InitShader()
         return hr;
     }
 
-    // 入力レイアウト設定
+    //// 入力レイアウト設定
+    //D3D11_INPUT_ELEMENT_DESC layout[] = {
+    //    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,   D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    //    { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    //};
+
+    //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,   D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,		D3D11_INPUT_PER_VERTEX_DATA, 0 },//位置
+        { "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,	0, sizeof(XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
+        { "NORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 2 ,	D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
     };
 
     hr = Direct3D::pDevice->CreateInputLayout(layout, _countof(layout), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &Direct3D::pVertexLayout);
