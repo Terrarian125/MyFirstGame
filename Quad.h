@@ -10,7 +10,7 @@ using namespace DirectX;
 struct CONSTANT_BUFFER  
 {  
    DirectX::XMMATRIX matWVP; 
-   DirectX::XMMATRIX	matW;
+   DirectX::XMMATRIX	matNormal;
 };  
 
 //í∏ì_èÓïÒ

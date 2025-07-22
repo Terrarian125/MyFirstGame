@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include "Quad.h"
 using namespace DirectX;
 
 Dice::Dice()
@@ -12,9 +13,9 @@ Dice::Dice()
 
 Dice::~Dice()
 {
-    if (vertexBuffer_) { vertexBuffer_->Release(); vertexBuffer_ = nullptr; }
-    if (constantBuffer_) { constantBuffer_->Release(); constantBuffer_ = nullptr; }
-    if (texture_) { texture_->Release(); delete texture_; texture_ = nullptr; }
+    //if (vertexBuffer_) { vertexBuffer_->Release(); vertexBuffer_ = nullptr; }
+    //if (constantBuffer_) { constantBuffer_->Release(); constantBuffer_ = nullptr; }
+    //if (texture_) { texture_->Release(); delete texture_; texture_ = nullptr; }
 }
 
 HRESULT Dice::Initialize()
@@ -128,6 +129,14 @@ HRESULT Dice::CreateVertexBuffer()
 
 void Dice::Draw(XMMATRIX worldMatrix)
 {
+	CONSTANT_BUFFER cb;
+	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matNormal = XMMatrixTranspose(XMMatrixInverse(nullptr, worldMatrix));
+	//cb.matWorld = XMMatrixTranspose(worldMatrix);
+
+	D3D11_MAPPED_SUBRESOURCE pdata;
+	HRESULT hr = Direct3D::pContext->Map(constantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);
+
     // ワールド×ビュー×プロジェクション行列の合成と転置
     XMMATRIX view = Camera::GetViewMatrix();
     XMMATRIX proj = Camera::GetProjectionMatrix();
