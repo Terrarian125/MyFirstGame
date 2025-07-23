@@ -274,6 +274,8 @@ void Direct3D::BeginDraw()
     pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
 }
 
+
+
 void Direct3D::EndDraw()
 {
     //スワップ（バックバッファを表に表示する）
