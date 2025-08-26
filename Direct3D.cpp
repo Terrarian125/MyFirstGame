@@ -6,40 +6,40 @@
 
 namespace Direct3D
 {
-    ID3D11Device* pDevice;		                    //デバイス
-    ID3D11DeviceContext* pContext;	                //デバイスコンテキスト
-    IDXGISwapChain* pSwapChain;		                //スワップチェイン
-    ID3D11RenderTargetView* pRenderTargetView;	    //レンダーターゲットビュー
+	ID3D11Device* pDevice;		                    //デバイス
+	ID3D11DeviceContext* pContext;	                //デバイスコンテキスト
+	IDXGISwapChain* pSwapChain;		                //スワップチェイン
+	ID3D11RenderTargetView* pRenderTargetView;	    //レンダーターゲットビュー
 
-    struct SHADER_BUNDLE
-    {
-        ID3D11VertexShader* pVertexShader;	//頂点シェーダー
-        ID3D11PixelShader* pPixelShader;		//ピクセルシェーダー
-        ID3D11InputLayout* pVertexLayout;	//頂点インプットレイアウト
-        ID3D11RasterizerState* pRasterizerState;	//ラスタライザー
-    };
-
+	struct SHADER_BUNDLE
+	{
+		ID3D11VertexShader* pVertexShader;	//頂点シェーダー
+		ID3D11PixelShader* pPixelShader;		//ピクセルシェーダー
+		ID3D11InputLayout* pVertexLayout;	//頂点インプットレイアウト
+		ID3D11RasterizerState* pRasterizerState;	//ラスタライザー
+	};
+    
     ID3D11VertexShader* pVertexShader = nullptr;	//頂点シェーダー
     ID3D11PixelShader* pPixelShader = nullptr;		//ピクセルシェーダー
 
     ID3D11InputLayout* pVertexLayout = nullptr;	//頂点インプットレイアウト
     ID3D11RasterizerState* pRasterizerState = nullptr;	//ラスタライザー
-
+	
     SHADER_BUNDLE shaderBundle[SHADER_MAX];	//シェーダーのバンドル
 }
 
 
 HRESULT Direct3D::InitShader()
 {
-    if (FAILED(InitShader3D()))
-    {
-        return E_FAIL;
-    }
+	if (FAILED(InitShader3D()))
+	{
+		return E_FAIL;
+	}
     if (FAILED(InitShader2D()))
     {
         return E_FAIL;
     }
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT Direct3D::InitShader3D()
@@ -53,12 +53,12 @@ HRESULT Direct3D::InitShader3D()
     assert(pCompileVS != nullptr);
 
 
-    hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(),
+    hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), 
         pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pVertexShader));
-
+    
     if (FAILED(hr))
     {
-        MessageBox(nullptr, L"頂点シェーダの作成に失敗しました", L"エラー", MB_OK);
+        MessageBox(nullptr, L"頂点シェーダの作成の作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
 
@@ -73,7 +73,7 @@ HRESULT Direct3D::InitShader3D()
 
     if (FAILED(hr))
     {
-        MessageBox(nullptr, L"ピクセルシェーダの作成に失敗しました", L"エラー", MB_OK);
+        MessageBox(nullptr, L"ピクセルシェーダの作成の作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
 
@@ -81,7 +81,7 @@ HRESULT Direct3D::InitShader3D()
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,  sizeof(DirectX::XMFLOAT4), D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(DirectX::XMFLOAT4) + sizeof(DirectX::XMFLOAT2), D3D11_INPUT_PER_VERTEX_DATA, 0 } //法線ベクトル
+	    { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(DirectX::XMFLOAT4)+ sizeof(DirectX::XMFLOAT2), D3D11_INPUT_PER_VERTEX_DATA, 0 } //法線ベクトル
     };
 
     hr = pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(),
@@ -89,7 +89,7 @@ HRESULT Direct3D::InitShader3D()
 
     if (FAILED(hr))
     {
-        MessageBox(nullptr, L"頂点インプットレイアウトの作成に失敗しました", L"エラー", MB_OK);
+        MessageBox(nullptr, L"頂点インプットレイアウトの作成の作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
 
@@ -124,12 +124,12 @@ HRESULT Direct3D::InitShader2D()
     assert(pCompileVS != nullptr);
 
 
-    hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(),
+    hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), 
         pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_2D].pVertexShader));
 
     if (FAILED(hr))
     {
-        MessageBox(nullptr, L"頂点シェーダの作成に失敗しました", L"エラー", MB_OK);
+        MessageBox(nullptr, L"頂点シェーダの作成の作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
 
@@ -139,11 +139,11 @@ HRESULT Direct3D::InitShader2D()
     ID3DBlob* pCompilePS = nullptr;
     D3DCompileFromFile(L"Simple2D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
     assert(pCompilePS != nullptr);
-    hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(),
+    hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), 
         pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_2D].pPixelShader));
     if (FAILED(hr))
     {
-        MessageBox(nullptr, L"ピクセルシェーダ作成に失敗しました", L"エラー", MB_OK);
+        MessageBox(nullptr, L"ピクセルシェーダの作成の作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
 
@@ -152,14 +152,13 @@ HRESULT Direct3D::InitShader2D()
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,  sizeof(DirectX::XMFLOAT4), D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
     };
-	//頂点インプットレイアウトの作成
+
     hr = pDevice->CreateInputLayout(layout, 2, pCompileVS->GetBufferPointer(),
         pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_2D].pVertexLayout));
 
-	//頂点インプットレイアウトの作成に失敗した場合
     if (FAILED(hr))
     {
-        MessageBox(nullptr, L"頂点インプットレイアウト作成に?失敗しました", L"エラー", MB_OK);
+        MessageBox(nullptr, L"頂点インプットレイアウト作成の失敗", L"エラー", MB_OK);
         return hr;
     }
 
@@ -273,8 +272,6 @@ void Direct3D::BeginDraw()
     //画面をクリア
     pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
 }
-
-
 
 void Direct3D::EndDraw()
 {

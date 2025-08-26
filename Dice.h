@@ -5,7 +5,7 @@
 
 
 class Dice :
-	public Quad
+    public Quad
 {
 public:
 	Dice();
