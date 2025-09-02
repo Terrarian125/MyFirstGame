@@ -126,6 +126,8 @@ void Sprite::Draw(XMMATRIX& worldMatrix)
 	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
 	Direct3D::pContext->DrawIndexed(6, 0, 0);
+
+
 }
 
 void Sprite::Release()

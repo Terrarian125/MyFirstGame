@@ -8,6 +8,8 @@
 #include "Camera.h"
 //#include "Dice.h"
 #include "Sprite.h"
+#include "Transform.h"
+#include "Fbx.h"
 
 HWND hWnd = nullptr;
 
@@ -74,11 +76,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     //Quad* q = new Quad();
 	//Dice* dice = new Dice();
-	Sprite* sprite = new Sprite();
+	//Sprite* sprite = new Sprite();
+
+	Fbx* fbx = new Fbx();
+	fbx->Load("Oden.FBX");
 
     //hr = q->Initialize();
     //hr = dice->Initialize();
-    hr = sprite->Initialize();
+    //hr = sprite->Initialize();
     if (FAILED(hr))
     {
 		return 0;
@@ -99,8 +104,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		//ゲームの処理
 		Camera::Update(); // カメラの更新
-
         Direct3D::BeginDraw();
+
+        //Fbxクラスのオブジェクトを作成、モデル表示
+		//Fbx* fbxModel = new Fbx();
+		//fbxModel->Load("Oden.FBX");
+		//Transform fbxTrans;
+		////fbxTrans.position_ = XMVectorSet(0.0f, 0.0f, 5.0f, 1.0f);
+		////fbxTrans.scale_ = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
+		//fbxTrans.Calculation();
+		//fbxModel->Draw(fbxTrans);
+		//fbxModel->Release();
+		//SAFE_DELETE(fbxModel);
 
         //描画処理
 		//static float angle = 0.0f;
@@ -109,8 +124,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //q->Draw(mat);
 		//dice->Draw(mat); // ダイスの描画
 		//angle += 0.05f; //角度を更新
-		XMMATRIX mat = XMMatrixIdentity();
-		sprite->Draw(mat);
+
+		//XMMATRIX mat = XMMatrixIdentity();
+		//sprite->Draw(mat);
+
+       // Transform trans;
+       // trans.position_.x = ;
+       // trans.rotate_.z = ;
+           // trans.Calculation();
+      // sprite->Draw(trans.GetWorldMatrix());
 
         Direct3D::EndDraw();
     }
@@ -118,7 +140,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //q->Release();
     //SAFE_DELETE(q);
     //dice->Release();
-    sprite->Release();
+    //sprite->Release();
 	//SAFE_DELETE(dice);
 
     Direct3D::Release();
