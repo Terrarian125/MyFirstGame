@@ -1,28 +1,26 @@
 #include "Transform.h"
-//QuadクラスのDraw関数にTransformオブジェクトを渡すことで変形できるように改良する!
+
 Transform::Transform()
+	:matTranslate_(XMMatrixIdentity()),
+	matRotate_(XMMatrixIdentity()),
+	matScale_(XMMatrixIdentity())
 {
-	position_ = XMFLOAT3(0, 0, 0);
-	rotate_ = XMFLOAT3(0, 0, 0);
-	scale_ = XMFLOAT3(1, 1, 1);
-	matTranslate_ = XMMatrixIdentity();
-	matRotate_ = XMMatrixIdentity();
-	matScale_ = XMMatrixIdentity();
+	position_ = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	rotate_ = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	scale_ = XMFLOAT3(1.0f, 1.0f, 1.0f);
 }
 
 Transform::~Transform()
 {
+
 }
 
 void Transform::Calculation()
 {
-	//移動行列
 	matTranslate_ = XMMatrixTranslation(position_.x, position_.y, position_.z);
-	matRotate_ = XMMatrixRotationRollPitchYaw(
-		XMConvertToRadians(rotate_.x),
+	matRotate_ = XMMatrixRotationRollPitchYaw(XMConvertToRadians(rotate_.x),
 		XMConvertToRadians(rotate_.y),
 		XMConvertToRadians(rotate_.z));
-	//拡大縮小
 	matScale_ = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 }
 

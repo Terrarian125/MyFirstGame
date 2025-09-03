@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <d3d11.h>
 #include <fbxsdk.h>
@@ -11,36 +11,10 @@
 #pragma comment(lib, "LibXml2-MD.lib")
 #pragma comment(lib, "zlib-MD.lib")
 
+
 class Fbx
 {
-	//É}ÉeÉäÉAÉã
-	struct MATERIAL
-	{
-		Texture* pTexture;
-	};
-	struct CONSTANT_BUFFER
-	{
-		XMMATRIX	matWVP;
-		XMMATRIX	matNormal;
-	};
-
-	struct VERTEX
-	{
-		XMVECTOR position;
-		XMVECTOR uv;
-	};
-
-	int vertexCount_;	//í∏ì_êî
-	int polygonCount_;	//É|ÉäÉSÉìêî
-	int materialCount_;	//É}ÉeÉäÉAÉãÇÃå¬êî
-
-	ID3D11Buffer *pVertexBuffer_;
-	ID3D11Buffer **pIndexBuffer_;
-	ID3D11Buffer *pConstantBuffer_;
-	std::vector<MATERIAL> materialList_;
-
 public:
-
 	Fbx();
 	HRESULT Load(std::string fileName);
 	void    Draw(Transform& transform);
@@ -50,4 +24,37 @@ public:
 	void InitIndex(FbxMesh* mesh);
 	void InitConstantBuffer();
 	void InitMaterial(FbxNode* pNode);
+
+private:
+	struct MATERIAL
+	{
+		Texture*		pTexture;
+		XMFLOAT4		diffuse;
+	};
+
+	struct CONSTANT_BUFFER
+	{
+		XMMATRIX		matWVP;
+		XMMATRIX		matNormal;
+		XMFLOAT4		diffuse;
+		BOOL materialFlag;
+	};
+	struct VERTEX
+	{
+		XMVECTOR position;
+		XMVECTOR uv;
+		XMVECTOR normal;
+	};
+
+	//„Éê„ÉÉ„Éï„Ç°„ÅÆÁöÜ„Åï„Çì
+	ID3D11Buffer* pVertexBuffer_;
+	ID3D11Buffer** pIndexBuffer_;
+	ID3D11Buffer* pConstantBuffer_;
+	std::vector<MATERIAL> pMaterialList_;
+	std::vector<int> indexCount_;
+
+	int vertexCount_;
+	int polygonCount_;
+	int materialCount_;
+
 };

@@ -7,9 +7,10 @@
 //#include "Quad.h"
 #include "Camera.h"
 //#include "Dice.h"
-#include "Sprite.h"
+//#include "Sprite.h"
 #include "Transform.h"
 #include "Fbx.h"
+
 
 HWND hWnd = nullptr;
 
@@ -34,16 +35,16 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: ここにコードを挿入してください。
 
-	//szWindowClass = WIN_CLASS_NAME; // ウィンドウ クラス名を設定
+    //szWindowClass = WIN_CLASS_NAME; // ウィンドウ クラス名を設定
 
     // グローバル文字列を初期化する
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -52,7 +53,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
     // アプリケーション初期化の実行:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
     }
@@ -62,36 +63,35 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     hr = Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
     if (FAILED(hr))
     {
-		return 0;
+        return 0;
     }
 
-	Camera::Initialize(); // カメラの初期化
+    Camera::Initialize(); // カメラの初期化
 
 
-    
+
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
 
-    MSG msg = {};  
+    MSG msg = {};
 
 
     //Quad* q = new Quad();
-	//Dice* dice = new Dice();
-	//Sprite* sprite = new Sprite();
-
-	Fbx* fbx = new Fbx();
-	fbx->Load("Oden.FBX");
+    //Dice* dice = new Dice();
+    //Sprite* sprite = new Sprite();
+    Fbx* fbx = new Fbx();
+    fbx->Load("Oden.fbx");
 
     //hr = q->Initialize();
     //hr = dice->Initialize();
-    //hr = sprite->Initialize();
+   // hr = sprite->Initialize();
     if (FAILED(hr))
     {
-		return 0;
+        return 0;
     }
-    
-    
+
+
     // メイン メッセージ ループ:
-    while(msg.message != WM_QUIT)
+    while (msg.message != WM_QUIT)
     {
         //メッセージあり
 
@@ -102,37 +102,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         //メッセージなし
 
-		//ゲームの処理
-		Camera::Update(); // カメラの更新
+        //ゲームの処理
+        Camera::Update(); // カメラの更新
+
         Direct3D::BeginDraw();
 
-        //Fbxクラスのオブジェクトを作成、モデル表示
-		//Fbx* fbxModel = new Fbx();
-		//fbxModel->Load("Oden.FBX");
-		//Transform fbxTrans;
-		////fbxTrans.position_ = XMVectorSet(0.0f, 0.0f, 5.0f, 1.0f);
-		////fbxTrans.scale_ = XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
-		//fbxTrans.Calculation();
-		//fbxModel->Draw(fbxTrans);
-		//fbxModel->Release();
-		//SAFE_DELETE(fbxModel);
-
         //描画処理
-		//static float angle = 0.0f;
+        //static float angle = 0.0f;
         //XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
-		//mat *= XMMatrixTranslation(0.0f, 0.0f, 5.0f); //Z軸方向に5.0f移動
+        //mat *= XMMatrixTranslation(0.0f, 0.0f, 5.0f); //Z軸方向に5.0f移動
         //q->Draw(mat);
-		//dice->Draw(mat); // ダイスの描画
-		//angle += 0.05f; //角度を更新
+        //dice->Draw(mat); // ダイスの描画
+        //angle += 0.05f; //角度を更新
 
-		//XMMATRIX mat = XMMatrixIdentity();
-		//sprite->Draw(mat);
 
-       // Transform trans;
-       // trans.position_.x = ;
-       // trans.rotate_.z = ;
-           // trans.Calculation();
-      // sprite->Draw(trans.GetWorldMatrix());
+
+
+        //XMMATRIX mat = XMMatrixIdentity();
+        Transform trans;
+        trans.position_.x = 1.0f;
+        trans.rotate_.z = 0.0f;
+        trans.Calculation();
+        // XMMATRIX Mtrs = trans.GetWorldMatrix();
+         //sprite->Draw(Mtrs);
+        fbx->Draw(trans);
+
 
         Direct3D::EndDraw();
     }
@@ -141,13 +135,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //SAFE_DELETE(q);
     //dice->Release();
     //sprite->Release();
-	//SAFE_DELETE(dice);
+    //SAFE_DELETE(dice);
 
     Direct3D::Release();
 
 
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
+
+
 
 
 
