@@ -12,8 +12,7 @@ cbuffer global
 {
     float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
     float4x4 matNormal; // ワールド行列
-    //float4x4 matWorld; // ワールド行列
-    float4 diffuseColor; // ポリゴンの基本色
+    float4 diffuseColor; // ディフューズ色
     bool useTexture; // テクスチャーを使うかどうか
 };
 
@@ -47,7 +46,8 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     normal.w = 0; //w成分は0にする
     float4 light = float4(-1, 0.5, -0.7, 0);
     light = normalize(light);
-    outData.color = dot(normal, light);
+    light.w = 0;
+    outData.color = clamp(dot(normal, light), 0, 1);
 
 	//まとめて出力
     return outData;
@@ -61,12 +61,13 @@ float4 PS(VS_OUT inData) : SV_Target
     //return float4(1, 1, 0, 1);
     float4 color;
     if (useTexture == 1)
-       { 
-            color = g_texture.Sample(g_sampler, inData.uv) * inData.color; //テクスチャーから色を取得
-        }
+    {
+        color = g_texture.Sample(g_sampler, inData.uv); //テクスチャーから色を取得
+    }
     else
-    {   
+    {
         color = float4(1, 1, 1, 1);
+
     }
     //float4 ret = float4(inData.uv.x, inData.uv.y, 0, 1);
     return color;

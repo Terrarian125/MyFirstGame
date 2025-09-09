@@ -12,6 +12,7 @@ Fbx::Fbx()
 	, pConstantBuffer_(nullptr)
 	, vertexCount_(0)
 	, polygonCount_(0)
+	, materialCount_(0)
 {
 }
 
@@ -24,8 +25,9 @@ HRESULT Fbx::Load(std::string fileName)
 	basePath = currPath;
 	currPath = currPath / subDir;
 	//fs::path subPath(currPath.string() + "\\" + subDir);
-	assert(fs::exists(currPath));
+	assert(fs::exists(currPath));//subPathはあります、という確認
 	fs::current_path(currPath);
+
 	//マネージャを生成
 	FbxManager* pFbxManager = FbxManager::Create();
 
@@ -72,22 +74,19 @@ void Fbx::Draw(Transform& transform)
 	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.matNormal = transform.GetNormalMatrix();
 
-	/*for (int i = 0; i < materialCount_; i++)
-	{
-		if (pMaterialList_[i].pTexture)
-		{
-			cb.materialFlag = TRUE;
-			cb.diffuse = XMFLOAT4(1, 1, 1, 1);
-			break;
-		}
-		else
-		{
-			cb.diffuse = pMaterialList_[i].diffuse;
-			cb.materialFlag = FALSE;
-		}
-	}*/
-
-
+	//for (int i = 0;i < materialCount_;i++)
+	//{
+	//	if (pMaterialList_[i].pTexture)
+	//	{
+	//		cb.materialFlag = { 1, 1, 1,1 };
+	//		cb.diffuse = XMFLOAT4(1, 1, 1, 1);//保険
+	//	}
+	//	else
+	//	{
+	//		cb.materialFlag = { 0,0,0,0 };
+	//		cb.diffuse = pMaterialList_[i].diffuse;
+	//	}
+	//}
 
 	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
 	//頂点バッファ
@@ -100,7 +99,7 @@ void Fbx::Draw(Transform& transform)
 		if (pMaterialList_[i].pTexture)
 		{
 			cb.materialFlag = TRUE;
-			cb.diffuse = XMFLOAT4(1, 1, 1, 1);
+			cb.diffuse = XMFLOAT4(1, 1, 1, 1);//保険
 		}
 		else
 		{
@@ -113,6 +112,7 @@ void Fbx::Draw(Transform& transform)
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
 
 		Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
+
 		// インデックスバッファーをセット
 		stride = sizeof(int);
 		offset = 0;
@@ -133,7 +133,7 @@ void Fbx::Draw(Transform& transform)
 		}
 
 		//描画
-		Direct3D::pContext->DrawIndexed(indexCount_[i] * 3, 0, 0);
+		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
 	}
 }
 
@@ -164,11 +164,10 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
 			vertices[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
 
-			//頂点の法線
-			FbxVector4 normal;
-			mesh->GetPolygonVertexNormal(poly, vertex, normal);
-			vertices[index].normal 
-				= XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
+				//頂点の法線
+			FbxVector4 Normal;
+			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
+			vertices[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
 		}
 	}
 	// 頂点バッファ作成
@@ -199,6 +198,9 @@ void Fbx::InitIndex(FbxMesh* mesh)
 
 	int* index = new int[polygonCount_ * 3];
 	indexCount_ = std::vector<int>(materialCount_);
+	//indexCount_.resize(materialCount_);
+
+
 	for (int i = 0; i < materialCount_; i++)
 	{
 
@@ -220,6 +222,9 @@ void Fbx::InitIndex(FbxMesh* mesh)
 				}
 			}
 		}
+
+		indexCount_[i] = count;
+
 		//自力でどうぞ
 		//	（ここもデータサイズを指定するところだけ注意）
 		D3D11_BUFFER_DESC   bd;
@@ -284,17 +289,21 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			FbxFileTexture* textureInfo = lProperty.GetSrcObject<FbxFileTexture>(0);
 			const char* textureFilePath = textureInfo->GetRelativeFileName();
 
+			//相対パスを絶対パスに変換
 			fs::path tPath(textureFilePath);
+			//fs::path tPath = fs::path(textureFilePath);
+			//絶対パスに変換
+			//tPath = fs::absolute(tPath);
 			if (fs::is_regular_file(tPath))
 			{
 				//ここでテクスチャの読み込み
 				pMaterialList_[i].pTexture = new Texture;
-				pMaterialList_[i].pTexture->Load(textureFilePath); 
+				pMaterialList_[i].pTexture->Load(tPath.string());
 			}
 			else
 			{
 				//テクスチャファイルが無いときの処理(エラー）
-				
+
 			}
 
 		}
@@ -303,9 +312,10 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		{
 			//テスクチャないときの処理
 			pMaterialList_[i].pTexture = nullptr;
-			//マテリアルの色　Lambert：拡散反射と、アンビエントのみのシェーディングモデル
-			FbxDouble3 color = ((FbxSurfaceLambert*)pMaterial)->Diffuse.Get();
-			pMaterialList_[i].diffuse = { (float)color[0], (float)color[1], (float)color[2], 1.0f };
+			//マテリアルの色
+			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
+			FbxDouble3  diffuse = pMaterial->Diffuse;
+			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 		}
 
 	}
