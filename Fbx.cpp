@@ -46,12 +46,13 @@ HRESULT Fbx::Load(std::string fileName)
 	FbxNode* pNode = rootNode->GetChild(0);
 	FbxMesh* mesh = pNode->GetMesh();
 
-
 	//各情報の個数を取得
 
 	vertexCount_ = mesh->GetControlPointsCount();	//頂点の数
 	polygonCount_ = mesh->GetPolygonCount();	//ポリゴンの数
 	materialCount_ = pNode->GetMaterialCount(); //マテリアルの数
+
+
 
 	InitVertex(mesh);
 	InitIndex(mesh);
@@ -74,6 +75,7 @@ void Fbx::Draw(Transform& transform)
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.matNormal = transform.GetNormalMatrix();
+
 
 	//for (int i = 0;i < materialCount_;i++)
 	//{
@@ -163,12 +165,13 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
-			vertices[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
+			vertices[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 1.0f);
 
-				//頂点の法線
-			FbxVector4 Normal;
-			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
-			vertices[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
+			//頂点の法線
+			FbxVector4 normal;
+			mesh->GetPolygonVertexNormal(poly, vertex, normal);
+			vertices[index].normal
+				= XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
 		}
 	}
 	// 頂点バッファ作成
@@ -290,11 +293,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			FbxFileTexture* textureInfo = lProperty.GetSrcObject<FbxFileTexture>(0);
 			const char* textureFilePath = textureInfo->GetRelativeFileName();
 
-			//相対パスを絶対パスに変換
 			fs::path tPath(textureFilePath);
-			//fs::path tPath = fs::path(textureFilePath);
-			//絶対パスに変換
-			//tPath = fs::absolute(tPath);
 			if (fs::is_regular_file(tPath))
 			{
 				//ここでテクスチャの読み込み
@@ -311,8 +310,8 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		//テクスチャ無し
 		else
 		{
-			//テスクチャないときの処理
 			pMaterialList_[i].pTexture = nullptr;
+
 			//マテリアルの色
 			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
 			FbxDouble3  diffuse = pMaterial->Diffuse;
