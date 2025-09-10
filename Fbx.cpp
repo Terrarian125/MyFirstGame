@@ -46,6 +46,7 @@ HRESULT Fbx::Load(std::string fileName)
 	FbxNode* pNode = rootNode->GetChild(0);
 	FbxMesh* mesh = pNode->GetMesh();
 
+
 	//Šeî•ñ‚ÌŒÂ”‚ğæ“¾
 
 	vertexCount_ = mesh->GetControlPointsCount();	//’¸“_‚Ì”

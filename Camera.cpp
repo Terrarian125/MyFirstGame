@@ -68,7 +68,7 @@ void Camera::Update()
 		position_ = XMVectorAdd(position_, move);
 		target_ = XMVectorAdd(target_, move);
 	}
-	// ←→キーで左右に回転（Yaw）
+	// ←→キーで左右に回転
 	XMVECTOR direction = XMVectorSubtract(target_, position_);
 	XMMATRIX rotMatrix;
 

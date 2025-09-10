@@ -10,6 +10,7 @@
 //#include "Sprite.h"
 #include "Transform.h"
 #include "Fbx.h"
+#include "Input.h"
 
 
 HWND hWnd = nullptr;
@@ -18,7 +19,7 @@ HWND hWnd = nullptr;
 
 #define MAX_LOADSTRING 100
 
-const wchar_t* WIN_CLASS_NAME = L"SAMPLE GAME WINDOW"; // ウィンドウ クラス名
+const wchar_t* WIN_CLASS_NAME = L"さんぷるうぃんどう"; // ウィンドウ クラス名
 const int WINDOW_WIDTH = 800;  //ウィンドウの幅
 const int WINDOW_HEIGHT = 600; //ウィンドウの高さ //SVGAサイズ
 
@@ -68,7 +69,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Camera::Initialize(); // カメラの初期化
 
-
+ //   //DirectInputの初期化
+	Input::Initialize(hWnd);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
 
@@ -116,6 +118,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //dice->Draw(mat); // ダイスの描画
         //angle += 0.05f; //角度を更新
 
+        //入力情報の更新
+		Input::Update();
 
 
 
@@ -128,6 +132,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
          //sprite->Draw(Mtrs);
         fbx->Draw(trans);
 
+		//ESCキーで終了
+        if (Input::IsKey(DIK_ESCAPE))
+        {
+            PostQuitMessage(0);
+        }
+
 
         Direct3D::EndDraw();
     }
@@ -137,7 +147,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //dice->Release();
     //sprite->Release();
     //SAFE_DELETE(dice);
+    //SAFE_DELETE(sprite);
 
+	//SAFE_DELETE(fbx);
+	Input::Release();
     Direct3D::Release();
 
 
@@ -213,7 +226,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  関数: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
 //  目的: メイン ウィンドウのメッセージを処理します。
-//
+//　ここでいうメッセージは、キーボードやマウスの入力、ウィンドウの移動やサイズ変更などのユーザーのの操作とかのことを言う
 //  WM_COMMAND  - アプリケーション メニューの処理
 //  WM_PAINT    - メイン ウィンドウを描画する
 //  WM_DESTROY  - 中止メッセージを表示して戻る
