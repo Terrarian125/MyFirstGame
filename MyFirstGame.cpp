@@ -107,6 +107,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         //ゲームの処理
         Camera::Update(); // カメラの更新
+        //入力情報の更新
+        Input::Update();
 
         Direct3D::BeginDraw();
 
@@ -118,8 +120,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //dice->Draw(mat); // ダイスの描画
         //angle += 0.05f; //角度を更新
 
-        //入力情報の更新
-		Input::Update();
+
 
 
 
@@ -133,10 +134,27 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         fbx->Draw(trans);
 
 		//ESCキーで終了
-        if (Input::IsKey(DIK_ESCAPE))
+        if (Input::IsKeyDown(DIK_ESCAPE))
         {
-            PostQuitMessage(0);
+			static int cnt = 0;
+            cnt++;
+            if (cnt >= 3)
+            {
+                PostQuitMessage(0);
+            }
         }
+
+		//右クリック３回で終了
+		if (Input::IsMouseButtonDown(1))
+		{
+			static int cnt = 0;
+			cnt++;
+			if (cnt >= 3)
+			{
+				PostQuitMessage(0);
+			}
+		}
+
 
 
         Direct3D::EndDraw();
@@ -149,7 +167,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //SAFE_DELETE(dice);
     //SAFE_DELETE(sprite);
 
-	//SAFE_DELETE(fbx);
+	SAFE_DELETE(fbx);
 	Input::Release();
     Direct3D::Release();
 
@@ -259,6 +277,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         HDC hdc = BeginPaint(hWnd, &ps);
         // TODO: HDC を使用する描画コードをここに追加してください...
         EndPaint(hWnd, &ps);
+    }
+    break;
+
+    case WM_MOUSEMOVE:
+    {
+        int x = LOWORD(lParam);
+        int y = HIWORD(lParam);
+        Input::SetMousePosition(x, y);
+		OutputDebugStringA((std::to_string(x) + "," + std::to_string(y) + "\n").c_str());
     }
     break;
     case WM_DESTROY:
