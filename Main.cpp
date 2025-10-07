@@ -2,7 +2,7 @@
 //
 
 #include "framework.h"
-#include "MyFirstGame.h"
+#include "Main.h"
 #include "Direct3D.h"
 //#include "Quad.h"
 #include "Camera.h"

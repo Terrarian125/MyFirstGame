@@ -24,6 +24,7 @@
     <ProjectGuid>{3b8ee8ba-c65c-4927-b77b-01ea14936536}</ProjectGuid>
     <RootNamespace>MyFirstGame</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>MyGameEngine2025</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,12 +141,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Dice.h" />
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Fbx.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="MyFirstGame.h" />
+    <ClInclude Include="Main.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sprite.h" />
@@ -155,11 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Dice.cpp" />
     <ClCompile Include="Direct3D.cpp" />
     <ClCompile Include="Fbx.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="MyFirstGame.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
