@@ -1,5 +1,4 @@
 #include "Sprite.h"
-
 #include "Camera.h"
 #include "Texture.h"
 

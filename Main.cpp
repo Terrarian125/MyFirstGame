@@ -3,14 +3,14 @@
 
 #include "framework.h"
 #include "Main.h"
-#include "Direct3D.h"
+#include "Engine\\Direct3D.h"
 //#include "Quad.h"
-#include "Camera.h"
+#include "Engine\\Camera.h"
 //#include "Dice.h"
 //#include "Sprite.h"
-#include "Transform.h"
-#include "Fbx.h"
-#include "Input.h"
+#include "Engine\\Transform.h"
+#include "Engine\\Fbx.h"
+#include "Engine\\Input.h"
 
 
 HWND hWnd = nullptr;
