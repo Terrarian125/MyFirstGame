@@ -1,21 +1,15 @@
-﻿// MyFirstGame.cpp : アプリケーションのエントリ ポイントを定義します。
-//
-
-#include "framework.h"
+﻿#include "framework.h"
 #include "Main.h"
 #include "Engine\\Direct3D.h"
-//#include "Quad.h"
 #include "Engine\\Camera.h"
-//#include "Dice.h"
-//#include "Sprite.h"
 #include "Engine\\Transform.h"
 #include "Engine\\Fbx.h"
 #include "Engine\\Input.h"
+#include "Engine\\RootJob.h"
 
-
+// グローバル変数としてpRootJobを定義  
+RootJob* pRootJob = nullptr;
 HWND hWnd = nullptr;
-
-
 
 #define MAX_LOADSTRING 100
 
@@ -23,6 +17,7 @@ const wchar_t* WIN_CLASS_NAME = L"さんぷるうぃんどう"; // ウィンド�
 const int WINDOW_WIDTH = 800;  //ウィンドウの幅
 const int WINDOW_HEIGHT = 600; //ウィンドウの高さ //SVGAサイズ
 
+RootJob* rootJob = nullptr;
 
 // グローバル変数:
 HINSTANCE hInst;                                // 現在のインターフェイス
@@ -52,7 +47,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_MYFIRSTGAME, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
-
     // アプリケーション初期化の実行:
     if (!InitInstance(hInstance, nCmdShow))
     {
@@ -76,22 +70,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg = {};
 
+	pRootJob = new RootJob(nullptr);
+	pRootJob->Initialize();
 
-    //Quad* q = new Quad();
-    //Dice* dice = new Dice();
-    //Sprite* sprite = new Sprite();
-    Fbx* fbx = new Fbx();
-   // fbx->Load("Oden.fbx");
-    fbx->Load("Oden.FBX");
-
-    //hr = q->Initialize();
-    //hr = dice->Initialize();
-   // hr = sprite->Initialize();
     if (FAILED(hr))
     {
         return 0;
     }
-
 
     // メイン メッセージ ループ:
     while (msg.message != WM_QUIT)
@@ -110,28 +95,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //入力情報の更新
         Input::Update();
 
-        Direct3D::BeginDraw();
-
-        //描画処理
-        //static float angle = 0.0f;
-        //XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
-        //mat *= XMMatrixTranslation(0.0f, 0.0f, 5.0f); //Z軸方向に5.0f移動
-        //q->Draw(mat);
-        //dice->Draw(mat); // ダイスの描画
-        //angle += 0.05f; //角度を更新
-
-
-
-
-
-        //XMMATRIX mat = XMMatrixIdentity();
-        static Transform trans;
-        trans.position_.x = 1.0f;
-        trans.rotate_.y += 0.1f;
-        trans.Calculation();
-        // XMMATRIX Mtrs = trans.GetWorldMatrix();
-         //sprite->Draw(Mtrs);
-        fbx->Draw(trans);
+		pRootJob->Update();
 
 		//ESCキーで終了
         if (Input::IsKeyDown(DIK_ESCAPE))
@@ -156,18 +120,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 
 
+        Direct3D::BeginDraw();
+
+        //p
 
         Direct3D::EndDraw();
     }
 
-    //q->Release();
-    //SAFE_DELETE(q);
-    //dice->Release();
-    //sprite->Release();
-    //SAFE_DELETE(dice);
-    //SAFE_DELETE(sprite);
-
-	SAFE_DELETE(fbx);
+	pRootJob->Release();
 	Input::Release();
     Direct3D::Release();
 
