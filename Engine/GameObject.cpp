@@ -13,3 +13,12 @@ GameObject::GameObject(GameObject* parent, const string& name)
 GameObject::~GameObject()
 {
 }
+
+void GameObject::DrawSub()
+{
+//自分と子オブジェクトを描画
+	Draw();
+	for (auto child : childList_) {
+		child->DrawSub();
+	}
+}

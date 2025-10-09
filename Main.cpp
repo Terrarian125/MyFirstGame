@@ -122,7 +122,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         Direct3D::BeginDraw();
 
-        //p
+		pRootJob->DrawSub();
 
         Direct3D::EndDraw();
     }
