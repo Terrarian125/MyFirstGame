@@ -30,6 +30,10 @@ void Player::Update()
 {
 	//‚¨‚Å‚ñ‚ð‰ñ“]‚³‚¹‚é
 	transform_.rotate_.y += 2.0f;
+	if (transform_.rotate_.y > 720.0f) 
+	{
+		KillMe();
+	}
 }
 
 void Player::Draw()
