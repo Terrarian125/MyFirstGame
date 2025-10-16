@@ -27,8 +27,8 @@ void Camera::Update()
 	XMVECTOR forward = XMVector3Normalize(XMVector3Cross(XMVectorSet(0, 1, 0, 0), right));
 	XMVECTOR up = XMVectorSet(0, 1, 0, 0); // è„ï˚å¸
 
-	const float moveSpeed = 0.003f;
-	const float rotateSpeed = 0.001f;
+	const float moveSpeed = 0.3f;
+	const float rotateSpeed = 0.2f;
 
 	if (GetAsyncKeyState('W') & 0x8000)
 	{

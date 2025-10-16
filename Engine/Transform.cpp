@@ -3,7 +3,8 @@
 Transform::Transform()
 	:matTranslate_(XMMatrixIdentity()),
 	matRotate_(XMMatrixIdentity()),
-	matScale_(XMMatrixIdentity())
+	matScale_(XMMatrixIdentity()),
+	pParent_(nullptr)
 {
 	position_ = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	rotate_ = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -26,6 +27,10 @@ void Transform::Calculation()
 
 XMMATRIX Transform::GetWorldMatrix()
 {
+	if (pParent_ != nullptr) {
+		return matScale_ * matRotate_ * matTranslate_ * pParent_->GetWorldMatrix();
+	}
+	else
 	return matScale_ * matRotate_ * matTranslate_;
 }
 
