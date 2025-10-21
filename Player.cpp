@@ -1,9 +1,10 @@
 #include "Player.h"
 #include "Engine/Fbx.h"
 #include "ChildOden.h"
+#include "Engine\\Model.h"
 
 Player::Player(GameObject* parent)
-	:GameObject(parent, "Player"), pFbx_(nullptr)
+	:GameObject(parent, "Player"), pFbx_(nullptr), hModel_(-1)
 {
 }
 
@@ -24,6 +25,8 @@ void Player::Initialize()
 	pLChildOden_ = (ChildOden *)Instanitiate<ChildOden>(this);
 	pRChildOden_->SetPosition(2.0f, 1.3f, 0.0f);
 	pLChildOden_->SetPosition(-2.0f, 1.3f, 0.0f);
+	hModel_ = Model::Load("Oden.fbx");
+	assert(hModel_ >= 0);
 }
 
 void Player::Update()
@@ -38,9 +41,11 @@ void Player::Update()
 
 void Player::Draw()
 {
-	if (pFbx_) {
-		pFbx_->Draw(transform_);
-	}
+	//if (pFbx_) {
+	//	pFbx_->Draw(transform_);
+	//}
+	Model::SetTransform(hModel_, transform_);
+	Model::Draw(hModel_);
 }
 
 void Player::Release()

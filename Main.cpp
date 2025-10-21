@@ -7,6 +7,7 @@
 #include "Engine\\Fbx.h"
 #include "Engine\\Input.h"
 #include "Engine\\RootJob.h"
+#include "Engine\\Model.h"
 
 HWND hWnd = nullptr;
 
@@ -153,6 +154,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         Direct3D::EndDraw();
     }
 
+	Model::Release();
 	pRootJob->ReleaseSub();
 	Input::Release();
     Direct3D::Release();
