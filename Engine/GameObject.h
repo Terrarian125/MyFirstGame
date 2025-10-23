@@ -24,8 +24,11 @@ public:
 
 	void SetPosition(XMFLOAT3 position);
 	void SetPosition(float x, float y, float z);
-
 	void KillMe();
+
+	GameObject* GetRootJob();
+	GameObject* FindChildObject(const string& name);
+	GameObject* FindObject(const string& name);
 
 	template <typename T>
 	GameObject* Instanitiate(GameObject* parent)
