@@ -42,9 +42,25 @@ void GameObject::DrawSub()
 
 void GameObject::UpdateSub()
 {
-	Update();
-	for (auto child : childList_) {
+	transform_.Calculation();
+	this->Update();
+	for (auto child : childList_) 
+	{
 		child->UpdateSub();
+	}
+
+	for (auto itr = childList_.begin(); itr != childList_.end(); )
+	{
+		if ((*itr)->isDead_)
+		{
+			(*itr)->ReleaseSub();
+			delete (*itr);
+			itr = childList_.erase(itr);
+		}
+		else
+		{
+			++itr;
+		}
 	}
 }
 
