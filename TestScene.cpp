@@ -1,7 +1,8 @@
+//テストシーンにTest.FBXを
 #include "TestScene.h"
 #include "Engine/Input.h"
 #include "Engine/SceneManager.h"
-
+#include "Test.h"
 
 TestScene::TestScene(GameObject* parent)
 	: GameObject(parent, "TestScene")
@@ -14,6 +15,8 @@ TestScene::~TestScene()
 
 void TestScene::Initialize()
 {
+	// Testを生成して、子に追加  
+	Instanitiate<Test>(this);
 }
 
 void TestScene::Update()
