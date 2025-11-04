@@ -1,4 +1,6 @@
-#include "GameObject.h"
+﻿#include "GameObject.h"
+#include "SphereCollider.h"
+#include <Windows.h>
 
 GameObject::GameObject()
 	:pParent_(nullptr)
@@ -16,11 +18,12 @@ GameObject::GameObject(GameObject* parent, const string& name)
 
 GameObject::~GameObject()
 {
+
 }
 
 void GameObject::DrawSub()
 {
-//�����Ǝq�I�u�W�F�N�g��`��
+//自分と子オブジェクトを描画
 	Draw();
 	for (auto child : childList_) {
 		child->DrawSub();
@@ -66,7 +69,7 @@ void GameObject::UpdateSub()
 
 void GameObject::ReleaseSub()
 {
-	this->Release();//���������
+	this->Release();//自分を解放
 	for (auto child : childList_) {
 		child->ReleaseSub();
 	}
@@ -103,7 +106,7 @@ GameObject* GameObject::FindChildObject(const string& name)
 {
 	if (this->objectName_ == name)
 	{
-		return this;//�������T����Ă�
+		return this;//自分が探されてた
 	}
 	else
 	{
@@ -112,10 +115,10 @@ GameObject* GameObject::FindChildObject(const string& name)
 			GameObject* result = child->FindChildObject(name);
 			if (result != nullptr)
 			{
-				return result;//��������
+				return result;//見つかった
 			}
 		}
-		return nullptr;//������Ȃ�����
+		return nullptr;//見つからなかった
 	}
 }
 
@@ -128,12 +131,40 @@ GameObject* GameObject::FindObject(const string& name)
 
 void GameObject::AddCollider(SphereCollider* pCollider)
 {
+	pCollider_ = pCollider;
 }
 
 void GameObject::Collision(GameObject* pTarget)
 {
+	//this->pCollider_とpTarget->pCollider_の当たり判定を行う
+	// ⓪閾値＝お互いの半径+半径
+	float thisR = this->pCollider_->GetRadius();
+	float tgrR = pTarget->pCollider_->GetRadius();
+	float thre = (thisR + tgrR) * (thisR + tgrR);
+	//①２つのコライダーの距離計算を行う
+	XMFLOAT3 thisP = this->transform_.position_;
+	XMFLOAT3 tgrP = pTarget->transform_.position_;
+	float dist = (thisP.x - tgrP.x) * (thisP.x - tgrP.x)
+				+  (thisP.y - tgrP.y) * (thisP.y - tgrP.y)
+				+  (thisP.z - tgrP.z) * (thisP.z - tgrP.z);
+	//②コライダーどうしが交差したら
+	if (dist <= thre)
+	{
+		//③なんかする
+		MessageBoxA(0,"ぶつかった","Collider",MB_OK);
+	}
 }
 
 void GameObject::RoundRobin(GameObject* pTarget)
 {
+	//①自分にコライダーがなかったらreturn
+	if (pCollider_ == nullptr) 
+		return;
+	//②自分とターゲット自体のコライダーの当たり判定
+	if(pTarget->pCollider_ != nullptr)
+		Collision(pTarget);
+	//③再帰的な奴で、ターゲットの子オブジェクトを当たり判定してく
+	for (auto itr : pTarget->childList_) {
+		RoundRobin(itr);
+	}
 }
