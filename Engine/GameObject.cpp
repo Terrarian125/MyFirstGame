@@ -125,3 +125,15 @@ GameObject* GameObject::FindObject(const string& name)
 	GameObject* result = rootJob->FindChildObject(name);
 	return result;
 }
+
+void GameObject::AddCollider(SphereCollider* pCollider)
+{
+}
+
+void GameObject::Collision(GameObject* pTarget)
+{
+}
+
+void GameObject::RoundRobin(GameObject* pTarget)
+{
+}

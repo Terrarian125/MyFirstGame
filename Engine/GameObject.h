@@ -1,11 +1,12 @@
 #pragma once
-
 #include <list>
 #include <string>
 #include "Transform.h"
 
 using std::string;
 using std::list;
+
+class SphereCollider;
 
 class GameObject
 {
@@ -30,6 +31,10 @@ public:
 	GameObject* FindChildObject(const string& name);
 	GameObject* FindObject(const string& name);
 
+	void AddCollider(SphereCollider* pCollider);
+	void Collision(GameObject* pTarget);
+	void RoundRobin(GameObject* pTarget);
+
 	template <typename T>
 	GameObject* Instanitiate(GameObject* parent)
 	{
@@ -39,10 +44,11 @@ public:
 		return(obj);
 	}
 protected:
-	list<GameObject*> childList_;
-	Transform transform_;
-	GameObject* pParent_;
-	string objectName_;
+	list<GameObject*>		childList_;
+	Transform						transform_;
+	GameObject*					pParent_;
+	string							objectName_;
+	SphereCollider*				pCollider_;
 private:
 	bool isDead_;
 };

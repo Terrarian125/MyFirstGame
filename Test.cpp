@@ -30,6 +30,7 @@ void Test::Initialize()
 
 void Test::Update()
 {
+	transform_.rotate_.y += 0.4f;
 }
 
 void Test::Draw()
