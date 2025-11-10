@@ -1,6 +1,7 @@
 #include "PlayScene.h"
 #include "Player.h"
-
+#include "Enemy.h"
+#include "Engine/SphereCollider.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	:GameObject(parent, "PlayScene")
@@ -19,6 +20,11 @@ void PlayScene::Initialize()
 	//pPlayer->Initialize();
 	//childList_.push_back(pPlayer);
 	Instanitiate<Player>(this);
+
+	// Enemy‚ğ¶¬
+	Instanitiate<Enemy>(this);
+	SphereCollider* col = new SphereCollider(0.5f);
+	AddCollider(col);
 }
 
 void PlayScene::Update()

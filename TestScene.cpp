@@ -3,7 +3,6 @@
 #include "Engine/Input.h"
 #include "Engine/SceneManager.h"
 #include "Test.h"
-#include "Enemy.h"
 
 TestScene::TestScene(GameObject* parent)
 	: GameObject(parent, "TestScene")
@@ -18,8 +17,7 @@ void TestScene::Initialize()
 {
 	// Test‚ğ¶¬‚µ‚ÄAq‚É’Ç‰Á  
 	Instanitiate<Test>(this);
-	// Enemy‚ğ¶¬
-	Instanitiate<Enemy>(this);
+
 }
 
 void TestScene::Update()

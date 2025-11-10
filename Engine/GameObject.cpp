@@ -47,6 +47,8 @@ void GameObject::UpdateSub()
 {
 	transform_.Calculation();
 	this->Update();
+
+	RoundRobin(this);
 	for (auto child : childList_) 
 	{
 		child->UpdateSub();
@@ -150,8 +152,10 @@ void GameObject::Collision(GameObject* pTarget)
 	//②コライダーどうしが交差したら
 	if (dist <= thre)
 	{
+		int a = 0;
+			a++;
 		//③なんかする
-		MessageBoxA(0,"ぶつかった","Collider",MB_OK);
+		//MessageBoxA(0,"ぶつかった","Collider",MB_OK);
 	}
 }
 
