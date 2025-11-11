@@ -1,9 +1,9 @@
 #include "Player.h"
+#include "Engine/Input.h"
 #include "Engine/Fbx.h"
 #include "ChildOden.h"
 #include "Engine\\Model.h"
-#include "Engine/SphereCollider.h"
-#include "Engine\\Input.h"
+#include "Bullet.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent, "Player"), pFbx_(nullptr), hModel_(-1)
@@ -29,9 +29,6 @@ void Player::Initialize()
 	pLChildOden_->SetPosition(-2.0f, 1.3f, 0.0f);
 	hModel_ = Model::Load("Oden.fbx");
 	assert(hModel_ >= 0);
-
-	SphereCollider* col = new SphereCollider(0.5f);
-	AddCollider(col);
 }
 
 void Player::Update()
@@ -39,11 +36,36 @@ void Player::Update()
 	static float x = 0.0;
 	float tx = sin(x) * 5.0f;
 	x += 0.02f;
-	
-	//transform_rotate_.y += 2.0f;
-	if (Input::IsKey(DIK_SPACE)) {
-		transform_.position_.z += 0.5f;
+	//transform_.position_.x = tx;
+	transform_.rotate_.y += 15.0f;
+
+	if (Input::IsKey(DIK_SPACE))
+	{
+		//Bullet‚ð‚Æ‚Î‚·
 	}
+
+	//WASD‚ÅˆÚ“®
+	if (Input::IsKey(DIK_W))
+	{
+		transform_.position_.z += 0.3f;
+	}
+	if (Input::IsKey(DIK_A))
+	{
+		transform_.position_.x -= 0.3f;
+	}
+	if (Input::IsKey(DIK_S))
+	{
+		transform_.position_.z -= 0.3f;
+	}
+	if (Input::IsKey(DIK_D))
+	{
+		transform_.position_.x += 0.3f;
+	}
+
+	//if (transform_.rotate_.y > 720.0f)
+	//{
+	//	KillMe();
+	//}
 }
 
 void Player::Draw()
@@ -62,10 +84,4 @@ void Player::Release()
 		delete pFbx_;
 		pFbx_ = nullptr;
 	}
-}
-
-//‚È‚ñ‚ñ‚©‚É‚ ‚½‚Á‚½
-void Player::OnCollision(GameObject** pTsrget)
-{
-	int a = 0;
 }

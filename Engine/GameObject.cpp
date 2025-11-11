@@ -150,14 +150,17 @@ void GameObject::Collision(GameObject* pTarget)
 				+  (thisP.y - tgrP.y) * (thisP.y - tgrP.y)
 				+  (thisP.z - tgrP.z) * (thisP.z - tgrP.z);
 	//②コライダーどうしが交差したら
-	if (dist <= thre)
-	{
-		int a = 0;
-			a++;
-		//③なんかする
-		//MessageBoxA(0,"ぶつかった","Collider",MB_OK);
+
+	if (dist <= thre) {
+		//当たり判定成立
+		this->onCollision(pTarget);
+		pTarget->onCollision(this);
+		//MessageBoxA(0, "ぶつかった", "Collider", MB_OK);
 	}
+
 }
+
+
 
 void GameObject::RoundRobin(GameObject* pTarget)
 {

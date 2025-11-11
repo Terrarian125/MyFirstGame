@@ -22,68 +22,68 @@ void Camera::Update()
 	//ビュー行列の作成
 	viewMatrix_ = XMMatrixLookAtLH(position_, target_, XMVectorSet(0, 1, 0, 0));
 
-	// 上下左右の移動
-	XMVECTOR right = XMVector3Normalize(XMVector3Cross(XMVectorSubtract(target_, position_), XMVectorSet(0, 1, 0, 0)));
-	XMVECTOR forward = XMVector3Normalize(XMVector3Cross(XMVectorSet(0, 1, 0, 0), right));
-	XMVECTOR up = XMVectorSet(0, 1, 0, 0); // 上方向
+	//// 上下左右の移動
+	//XMVECTOR right = XMVector3Normalize(XMVector3Cross(XMVectorSubtract(target_, position_), XMVectorSet(0, 1, 0, 0)));
+	//XMVECTOR forward = XMVector3Normalize(XMVector3Cross(XMVectorSet(0, 1, 0, 0), right));
+	//XMVECTOR up = XMVectorSet(0, 1, 0, 0); // 上方向
 
-	const float moveSpeed = 0.3f;
-	const float rotateSpeed = 0.2f;
+	//const float moveSpeed = 0.3f;
+	//const float rotateSpeed = 0.2f;
 
-	if (GetAsyncKeyState('W') & 0x8000)
-	{
-		XMVECTOR move = XMVectorScale(forward, moveSpeed);
-		position_ = XMVectorAdd(position_, move);
-		target_ = XMVectorAdd(target_, move);
-	}
-	if (GetAsyncKeyState('S') & 0x8000)
-	{
-		XMVECTOR move = XMVectorScale(forward, -moveSpeed);
-		position_ = XMVectorAdd(position_, move);
-		target_ = XMVectorAdd(target_, move);
-	}
-	if (GetAsyncKeyState('A') & 0x8000)
-	{
-		XMVECTOR move = XMVectorScale(right, moveSpeed);
-		position_ = XMVectorAdd(position_, move);
-		target_ = XMVectorAdd(target_, move);
-	}
-	if (GetAsyncKeyState('D') & 0x8000)
-	{
-		XMVECTOR move = XMVectorScale(right, -moveSpeed);
-		position_ = XMVectorAdd(position_, move);
-		target_ = XMVectorAdd(target_, move);
-	}
-	// 高さ調整（上昇）
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
-	{
-		XMVECTOR move = XMVectorScale(up, moveSpeed);
-		position_ = XMVectorAdd(position_, move);
-		target_ = XMVectorAdd(target_, move);
-	}
-	// 高さ調整（下降）
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-	{
-		XMVECTOR move = XMVectorScale(up, -moveSpeed);
-		position_ = XMVectorAdd(position_, move);
-		target_ = XMVectorAdd(target_, move);
-	}
-	// ←→キーで左右に回転
-	XMVECTOR direction = XMVectorSubtract(target_, position_);
-	XMMATRIX rotMatrix;
+	//if (GetAsyncKeyState('W') & 0x8000)
+	//{
+	//	XMVECTOR move = XMVectorScale(forward, moveSpeed);
+	//	position_ = XMVectorAdd(position_, move);
+	//	target_ = XMVectorAdd(target_, move);
+	//}
+	//if (GetAsyncKeyState('S') & 0x8000)
+	//{
+	//	XMVECTOR move = XMVectorScale(forward, -moveSpeed);
+	//	position_ = XMVectorAdd(position_, move);
+	//	target_ = XMVectorAdd(target_, move);
+	//}
+	//if (GetAsyncKeyState('A') & 0x8000)
+	//{
+	//	XMVECTOR move = XMVectorScale(right, moveSpeed);
+	//	position_ = XMVectorAdd(position_, move);
+	//	target_ = XMVectorAdd(target_, move);
+	//}
+	//if (GetAsyncKeyState('D') & 0x8000)
+	//{
+	//	XMVECTOR move = XMVectorScale(right, -moveSpeed);
+	//	position_ = XMVectorAdd(position_, move);
+	//	target_ = XMVectorAdd(target_, move);
+	//}
+	//// 高さ調整（上昇）
+	//if (GetAsyncKeyState(VK_UP) & 0x8000)
+	//{
+	//	XMVECTOR move = XMVectorScale(up, moveSpeed);
+	//	position_ = XMVectorAdd(position_, move);
+	//	target_ = XMVectorAdd(target_, move);
+	//}
+	//// 高さ調整（下降）
+	//if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	//{
+	//	XMVECTOR move = XMVectorScale(up, -moveSpeed);
+	//	position_ = XMVectorAdd(position_, move);
+	//	target_ = XMVectorAdd(target_, move);
+	//}
+	//// ←→キーで左右に回転
+	//XMVECTOR direction = XMVectorSubtract(target_, position_);
+	//XMMATRIX rotMatrix;
 
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-	{
-		rotMatrix = XMMatrixRotationY(-rotateSpeed);
-		direction = XMVector3TransformNormal(direction, rotMatrix);
-		target_ = XMVectorAdd(position_, direction);
-	}
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-	{
-		rotMatrix = XMMatrixRotationY(rotateSpeed);
-		direction = XMVector3TransformNormal(direction, rotMatrix);
-		target_ = XMVectorAdd(position_, direction);
-	}
+	//if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	//{
+	//	rotMatrix = XMMatrixRotationY(-rotateSpeed);
+	//	direction = XMVector3TransformNormal(direction, rotMatrix);
+	//	target_ = XMVectorAdd(position_, direction);
+	//}
+	//if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	//{
+	//	rotMatrix = XMMatrixRotationY(rotateSpeed);
+	//	direction = XMVector3TransformNormal(direction, rotMatrix);
+	//	target_ = XMVectorAdd(position_, direction);
+	//}
 }
 
 //位置を設定

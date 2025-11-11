@@ -1,15 +1,15 @@
 #pragma once
 #include "Engine\\GameObject.h"
-
+#include "Engine/Fbx.h"
 class Fbx;
 //class ChildOden;
 
-class Enemy :
+class Bullet :
 	public GameObject
 {
 public:
-	Enemy(GameObject* parent);
-	~Enemy();
+	Bullet(GameObject* parent);
+	~Bullet();
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;

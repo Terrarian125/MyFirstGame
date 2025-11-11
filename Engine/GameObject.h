@@ -28,11 +28,19 @@ public:
 	void KillMe();
 
 	GameObject* GetRootJob();
+    template <typename T>
+    T* Instantiate(GameObject* parent)
+    {
+       T* obj = new T(parent);
+       obj->Initialize();
+       return obj;
+    }
 	GameObject* FindChildObject(const string& name);
 	GameObject* FindObject(const string& name);
 
 	void AddCollider(SphereCollider* pCollider);
 	void Collision(GameObject* pTarget);
+	void onCollision(GameObject* pTsrget) {};
 	void RoundRobin(GameObject* pTarget);
 
 	template <typename T>

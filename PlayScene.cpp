@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Engine/SphereCollider.h"
+#include "Bullet.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	:GameObject(parent, "PlayScene")
@@ -23,12 +24,14 @@ void PlayScene::Initialize()
 
 	// Enemyを生成
 	Instanitiate<Enemy>(this);
-	SphereCollider* col = new SphereCollider(0.5f);
-	AddCollider(col);
+	//SphereCollider* col = new SphereCollider(0.5f);
+	//AddCollider(col);
 }
 
 void PlayScene::Update()
 {
+	//スペースキーが押されたらBulletを生成してとばす
+
 }
 
 void PlayScene::Draw()
