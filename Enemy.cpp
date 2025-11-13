@@ -18,8 +18,8 @@ void Enemy::Initialize()
 	pFbx_ = new Fbx();
 	//pFbx_->Load("pumpkin.fbx");
 
-	transform_.scale_ = { 1.0f,1.0f,1.0f };
-	transform_.position_.z = 50.0f;
+	transform_.scale_ = { 0.35f,0.4f,0.35f };
+	transform_.position_.z = 4.0f;
 
 	hModel_ = Model::Load("pumpkin.fbx");
 	//hModel_ = Model::Load("Bulet.fbx");
@@ -30,7 +30,13 @@ void Enemy::Initialize()
 
 void Enemy::Update()
 {
-	transform_.rotate_.y += 0.4f;
+	transform_.rotate_.y += 0.7f;
+	
+	//è„â∫à⁄ìÆ
+	static float y = 2.0;
+	float ty = sin(y) * 2.0f;
+	y += 0.02f;
+	transform_.position_.y = ty;
 }
 
 void Enemy::Draw()

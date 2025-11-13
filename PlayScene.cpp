@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Engine/SphereCollider.h"
 #include "Bullet.h"
+#include "Bar.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	:GameObject(parent, "PlayScene")
@@ -26,6 +27,8 @@ void PlayScene::Initialize()
 	Instanitiate<Enemy>(this);
 	//SphereCollider* col = new SphereCollider(0.5f);
 	//AddCollider(col);
+	//BarÇê∂ê¨
+	Instanitiate<Bar>(this);
 }
 
 void PlayScene::Update()

@@ -19,9 +19,10 @@ void Player::Initialize()
 	//Fbxの生成と初期化
 	pFbx_ = new Fbx();
 	pFbx_->Load("Oden.fbx");
-	transform_.scale_.x = 0.7f;
-	transform_.scale_.y = 0.7f;
-	transform_.scale_.z = 0.7f;
+	transform_.scale_.x = 0.3f;
+	transform_.scale_.y = 0.3f;
+	transform_.scale_.z = 0.3f;
+	transform_.position_.z = -4.0f;
 	//子オブジェクトにChildOdenを追加
 	pRChildOden_ = (ChildOden *)Instanitiate<ChildOden>(this);
 	pLChildOden_ = (ChildOden *)Instanitiate<ChildOden>(this);
@@ -42,24 +43,27 @@ void Player::Update()
 	if (Input::IsKey(DIK_SPACE))
 	{
 		//Bulletをとばす
+		
 	}
 
 	//WASDで移動
 	if (Input::IsKey(DIK_W))
 	{
-		transform_.position_.z += 0.3f;
+		transform_.position_.y += 0.3f;
 	}
 	if (Input::IsKey(DIK_A))
 	{
-		transform_.position_.x -= 0.3f;
+		transform_.position_.z -= 0.3f;
+		//transform_.position_.x -= 0.3f;
 	}
 	if (Input::IsKey(DIK_S))
 	{
-		transform_.position_.z -= 0.3f;
+		transform_.position_.y -= 0.3f;
 	}
 	if (Input::IsKey(DIK_D))
 	{
-		transform_.position_.x += 0.3f;
+		transform_.position_.z += 0.3f;
+		//transform_.position_.x += 0.3f;
 	}
 
 	//if (transform_.rotate_.y > 720.0f)
