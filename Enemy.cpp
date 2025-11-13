@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "Engine/Fbx.h"
-//#include "ChildOden.h"
 #include "Engine\\Model.h"
+//#include "Engine/SphereCollider.h"
 
 Enemy::Enemy(GameObject* parent)
 	:GameObject(parent, "Enemy"), pFbx_(nullptr), hModel_(-1)
@@ -16,16 +16,14 @@ void Enemy::Initialize()
 {
 
 	pFbx_ = new Fbx();
-	//pFbx_->Load("pumpkin.fbx");
 
 	transform_.scale_ = { 0.35f,0.4f,0.35f };
 	transform_.position_.z = 4.0f;
 
 	hModel_ = Model::Load("pumpkin.fbx");
-	//hModel_ = Model::Load("Bulet.fbx");
 
-	assert(hModel_ >= 0);
-
+	//SphereCollider* collision = new SphereCollider(0.32f);
+	//AddCollider(collision);
 }
 
 void Enemy::Update()
@@ -54,4 +52,9 @@ void Enemy::Release()
 	}
 }
 
+void Enemy::onCollision(GameObject* pTarget)
+{
+	// Ž©•ªŽ©g‚ðíœ‚·‚é
+	this->KillMe();
+}
 

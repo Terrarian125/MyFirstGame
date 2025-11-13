@@ -17,6 +17,10 @@ public:
 private:
 	Fbx* pFbx_;
 	int hModel_;
+	int life_;
+	//onCollision
+	void onCollision(GameObject* pTarget) override;
+
 	//ChildOden* pRChildOden_;
 	//ChildOden* pLChildOden_;
 };

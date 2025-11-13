@@ -37,13 +37,13 @@ void Player::Update()
 	static float x = 0.0;
 	float tx = sin(x) * 5.0f;
 	x += 0.02f;
-	//transform_.position_.x = tx;
 	transform_.rotate_.y += 15.0f;
 
-	if (Input::IsKey(DIK_SPACE))
+	if (Input::IsKeyDown(DIK_SPACE))
 	{
 		//Bullet‚ð‚Æ‚Î‚·
-		
+		Bullet* pBullet = (Bullet*)Instanitiate<Bullet>(GetRootJob());
+		pBullet->SetPosition(transform_.position_);
 	}
 
 	//WASD‚ÅˆÚ“®
@@ -65,7 +65,6 @@ void Player::Update()
 		transform_.position_.z += 0.3f;
 		//transform_.position_.x += 0.3f;
 	}
-
 	//if (transform_.rotate_.y > 720.0f)
 	//{
 	//	KillMe();

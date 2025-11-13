@@ -40,7 +40,7 @@ public:
 
 	void AddCollider(SphereCollider* pCollider);
 	void Collision(GameObject* pTarget);
-	void onCollision(GameObject* pTsrget) {};
+	virtual void onCollision(GameObject* pTarget) {};
 	void RoundRobin(GameObject* pTarget);
 
 	template <typename T>

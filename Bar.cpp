@@ -21,7 +21,7 @@ void Bar::Initialize()
 	transform_.position_.y = -2.0f;
 	transform_.position_.x = 3.0f;
 
-	//hModel_ = Model::Load("St.fbx");
+	hModel_ = Model::Load("St.fbx");
 	//hModel_ = Model::Load("Bulet.fbx");
 
 	assert(hModel_ >= 0);
