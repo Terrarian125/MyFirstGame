@@ -4,8 +4,8 @@ class SphereCollider
 {
 public:
 	SphereCollider(float radius);
-	float GetRadius() { return (radius_); }//ƒCƒ“ƒ‰ƒCƒ“éŒ¾
-	//bool isHit(SphereCollider* pTarget, float thisX, float thisY, float thisZ, float targetX, float targetY, float targetZ);
+	float GetRadius() { return (radius_); }
+
 private:
 	float radius_;//”¼Œa
 };

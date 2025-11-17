@@ -6,6 +6,7 @@ enum SCENE_ID
 	SCENE_ID_MAX,
 	SCENE_ID_PLAY,
 	SCENE_ID_TEST,
+	SCENE_ID_CLEARE
 };
 
 class SceneManager : public GameObject

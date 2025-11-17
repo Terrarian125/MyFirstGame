@@ -1,7 +1,9 @@
 #include "Enemy.h"
 #include "Engine/Fbx.h"
 #include "Engine\\Model.h"
-//#include "Engine/SphereCollider.h"
+#include "Engine/SphereCollider.h"
+#include "Bullet.h"
+#include "Engine/SceneManager.h"
 
 Enemy::Enemy(GameObject* parent)
 	:GameObject(parent, "Enemy"), pFbx_(nullptr), hModel_(-1)
@@ -22,8 +24,8 @@ void Enemy::Initialize()
 
 	hModel_ = Model::Load("pumpkin.fbx");
 
-	//SphereCollider* collision = new SphereCollider(0.32f);
-	//AddCollider(collision);
+	SphereCollider* collision = new SphereCollider(0.5f);
+	AddCollider(collision);
 }
 
 void Enemy::Update()
@@ -54,7 +56,23 @@ void Enemy::Release()
 
 void Enemy::onCollision(GameObject* pTarget)
 {
-	// 自分自身を削除する
-	this->KillMe();
-}
+	// 衝突相手が Bullet クラスであるかを確認
+	Bullet* pBullet = dynamic_cast<Bullet*>(pTarget);
 
+	if (pBullet != nullptr)
+	{
+		// pTarget は Bullet である
+
+		// 敵（自分自身）を削除する
+		this->KillMe();
+
+		// テストシーンに移動
+		GameObject* sceneManager = GetRootJob()->FindChildObject("SceneManager");
+		if (sceneManager != nullptr)
+		{
+			static_cast<SceneManager*>(sceneManager)->ChangeScene(SCENE_ID_CLEARE);
+		}
+		
+	}
+	// 衝突相手が Bullet 以外の場合は何もしない
+}

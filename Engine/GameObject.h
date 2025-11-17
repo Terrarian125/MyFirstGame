@@ -42,6 +42,7 @@ public:
 	void Collision(GameObject* pTarget);
 	virtual void onCollision(GameObject* pTarget) {};
 	void RoundRobin(GameObject* pTarget);
+	void CollectCollidableObjects(list<GameObject*>& outList);
 
 	template <typename T>
 	GameObject* Instanitiate(GameObject* parent)
@@ -59,4 +60,5 @@ protected:
 	SphereCollider*				pCollider_;
 private:
 	bool isDead_;
+	void CheckSceneCollisions();
 };

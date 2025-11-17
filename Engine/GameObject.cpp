@@ -48,6 +48,11 @@ void GameObject::UpdateSub()
 	transform_.Calculation();
 	this->Update();
 
+	if (pParent_ == nullptr) // GetRootJob() == this でも可
+	{
+		CheckSceneCollisions(); // 新しい関数を呼び出す
+	}
+
 	RoundRobin(this);
 	for (auto child : childList_) 
 	{
@@ -171,5 +176,48 @@ void GameObject::RoundRobin(GameObject* pTarget)
 	//③再帰的な奴で、ターゲットの子オブジェクトを当たり判定してく
 	for (auto itr : pTarget->childList_) {
 		RoundRobin(itr);
+	}
+}
+
+void GameObject::CollectCollidableObjects(list<GameObject*>& outList)
+{
+	// 自分自身にコライダーがあればリストに追加
+	if (pCollider_ != nullptr)
+	{
+		outList.push_back(this);
+	}
+
+	// 子オブジェクトに対して再帰的に呼び出し
+	for (auto child : childList_)
+	{
+		child->CollectCollidableObjects(outList);
+	}
+}
+
+void GameObject::CheckSceneCollisions()
+{
+	list<GameObject*> allColliders;
+	// 1. シーン内の全コライダーを持つオブジェクトを収集
+	this->CollectCollidableObjects(allColliders);
+
+	if (allColliders.empty()) return;
+
+	// 2. 総当たりチェック（リストからイテレータを使用）
+	for (auto itrA = allColliders.begin(); itrA != allColliders.end(); ++itrA)
+	{
+		GameObject* objA = *itrA;
+
+		// BはAの次の要素からチェックを開始 (objA vs objAの判定をスキップするため)
+		auto itrB = itrA;
+		++itrB;
+
+		for (; itrB != allColliders.end(); ++itrB)
+		{
+			GameObject* objB = *itrB;
+
+			// 3. 衝突判定関数を呼び出す
+			// objA->Collision(objB) の内部で objA->onCollision(objB) と objB->onCollision(objA) が実行される
+			objA->Collision(objB);
+		}
 	}
 }

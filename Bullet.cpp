@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "Engine\\Model.h"
 #include "Engine\\Model.h"
-//#include "Engine/SphereCollider.h"
+#include "Engine/SphereCollider.h"
 
 Bullet::Bullet(GameObject* parent)
 	:GameObject(parent, "Bullet"), pFbx_(nullptr), hModel_(-1), life_(600)
@@ -23,8 +23,8 @@ void Bullet::Initialize()
 
 	hModel_ = Model::Load("Bulet.fbx");
 
-	//SphereCollider* collision = new SphereCollider(0.32f);
-	//AddCollider(collision);
+	SphereCollider* collision = new SphereCollider(0.5f);
+	AddCollider(collision);
 
 }
 
@@ -53,5 +53,5 @@ void Bullet::Release()
 void Bullet::onCollision(GameObject* pTarget)
 {
 	// Ž©•ªŽ©g‚ðíœ‚·‚é
-	this->KillMe();
+	//this->KillMe();
 }
